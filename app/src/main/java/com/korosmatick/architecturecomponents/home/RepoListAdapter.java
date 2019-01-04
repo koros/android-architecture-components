@@ -1,9 +1,7 @@
 package com.korosmatick.architecturecomponents.home;
 
 import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.Observer;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +25,7 @@ public class RepoListAdapter extends RecyclerView.Adapter<RepoListAdapter.RepoVi
         viewModel.getRepos().observe(lifecycleOwner, repos -> {
             data.clear();
             if (repos != null) {
-                data.addAll(data);
+                data.addAll(repos);
                 notifyDataSetChanged();
             }
         });

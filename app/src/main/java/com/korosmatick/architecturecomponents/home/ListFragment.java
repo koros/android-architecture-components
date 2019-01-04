@@ -46,7 +46,6 @@ public class ListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         viewModel = ViewModelProviders.of(this).get(ListViewModel.class);
-
         listView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         listView.setAdapter(new RepoListAdapter(viewModel, this));
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
