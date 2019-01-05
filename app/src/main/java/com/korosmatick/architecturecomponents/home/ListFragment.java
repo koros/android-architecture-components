@@ -1,7 +1,7 @@
 package com.korosmatick.architecturecomponents.home;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,14 +16,21 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.korosmatick.architecturecomponents.R;
+import com.korosmatick.architecturecomponents.base.MyApplication;
 import com.korosmatick.architecturecomponents.details.DetailsFragment;
 import com.korosmatick.architecturecomponents.model.Repo;
+import com.korosmatick.architecturecomponents.viewmodel.ViewModelFactory;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class ListFragment extends Fragment implements RepoSelectedListener{
+
+    @Inject
+    ViewModelFactory viewModelFactory;
 
     @BindView(R.id.recycler_view)
     RecyclerView listView;
@@ -37,6 +44,12 @@ public class ListFragment extends Fragment implements RepoSelectedListener{
     private Unbinder unbinder;
     private ListViewModel viewModel;
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        MyApplication.getApplicationComponent(context).inject(this);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -47,7 +60,7 @@ public class ListFragment extends Fragment implements RepoSelectedListener{
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        viewModel = ViewModelProviders.of(this).get(ListViewModel.class);
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ListViewModel.class);
         listView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         listView.setAdapter(new RepoListAdapter(viewModel, this, this));
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -56,7 +69,7 @@ public class ListFragment extends Fragment implements RepoSelectedListener{
 
     @Override
     public void onRepoSelected(Repo repo) {
-        SelectedRepoViewModel selectedRepoViewModel = ViewModelProviders.of(getActivity()).get(SelectedRepoViewModel.class);
+        SelectedRepoViewModel selectedRepoViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(SelectedRepoViewModel.class);
         selectedRepoViewModel.setSelectedRepo(repo);
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.screen_container, new DetailsFragment())

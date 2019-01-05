@@ -1,8 +1,7 @@
 package com.korosmatick.architecturecomponents.details;
 
-import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,10 +12,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.korosmatick.architecturecomponents.R;
+import com.korosmatick.architecturecomponents.base.MyApplication;
 import com.korosmatick.architecturecomponents.home.SelectedRepoViewModel;
-import com.korosmatick.architecturecomponents.model.Repo;
+import com.korosmatick.architecturecomponents.viewmodel.ViewModelFactory;
 
-import org.w3c.dom.Text;
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,6 +24,7 @@ import butterknife.Unbinder;
 
 public class DetailsFragment extends Fragment {
 
+    @Inject ViewModelFactory viewModelFactory;
     @BindView(R.id.tv_repo_name) TextView repoNameTextView;
     @BindView(R.id.tv_repo_description) TextView repoDescriptionTextView;
     @BindView(R.id.tv_forks) TextView forksTextView;
@@ -31,6 +32,12 @@ public class DetailsFragment extends Fragment {
 
     private Unbinder unbinder;
     private SelectedRepoViewModel selectedRepoViewModel;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        MyApplication.getApplicationComponent(context).inject(this);
+    }
 
     @Nullable
     @Override
@@ -42,7 +49,7 @@ public class DetailsFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        selectedRepoViewModel = ViewModelProviders.of(getActivity()).get(SelectedRepoViewModel.class);
+        selectedRepoViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(SelectedRepoViewModel.class);
         selectedRepoViewModel.restoreFromBundle(savedInstanceState);
         displayRepo();
     }

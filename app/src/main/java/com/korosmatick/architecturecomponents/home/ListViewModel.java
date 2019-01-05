@@ -7,9 +7,11 @@ import android.util.Log;
 
 
 import com.korosmatick.architecturecomponents.model.Repo;
-import com.korosmatick.architecturecomponents.networking.RepoApi;
+import com.korosmatick.architecturecomponents.networking.RepoService;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -20,11 +22,14 @@ public class ListViewModel extends ViewModel {
     private final MutableLiveData<List<Repo>> repos = new MutableLiveData<>();
     private final MutableLiveData<Boolean> repoLoadError = new MutableLiveData<>();
     private final MutableLiveData<Boolean> loading = new MutableLiveData<>();
+    private final RepoService repoService;
 
 
     private Call<List<Repo>> repoCall;
 
-    public ListViewModel() {
+    @Inject
+    public ListViewModel(RepoService repoService) {
+        this.repoService = repoService;
         fetchRepos();
     }
 
@@ -42,7 +47,7 @@ public class ListViewModel extends ViewModel {
 
     private void fetchRepos() {
         loading.setValue(true);
-        repoCall = RepoApi.getInstance().getRepositories();
+        repoCall = repoService.getRepositories();
         repoCall.enqueue(new Callback<List<Repo>>() {
             @Override
             public void onResponse(Call<List<Repo>> call, Response<List<Repo>> response) {
