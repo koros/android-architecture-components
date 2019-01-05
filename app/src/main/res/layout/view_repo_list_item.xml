@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:orientation="horizontal"
     android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
     android:paddingLeft="@dimen/repo_left_right_padding"
     android:paddingRight="@dimen/repo_left_right_padding"
     android:paddingTop="@dimen/repo_bottom_top_padding"

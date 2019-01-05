@@ -16,12 +16,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.korosmatick.architecturecomponents.R;
+import com.korosmatick.architecturecomponents.details.DetailsFragment;
+import com.korosmatick.architecturecomponents.model.Repo;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class ListFragment extends Fragment {
+public class ListFragment extends Fragment implements RepoSelectedListener{
 
     @BindView(R.id.recycler_view)
     RecyclerView listView;
@@ -47,9 +49,19 @@ public class ListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         viewModel = ViewModelProviders.of(this).get(ListViewModel.class);
         listView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
-        listView.setAdapter(new RepoListAdapter(viewModel, this));
+        listView.setAdapter(new RepoListAdapter(viewModel, this, this));
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
         observeViewModel();
+    }
+
+    @Override
+    public void onRepoSelected(Repo repo) {
+        SelectedRepoViewModel selectedRepoViewModel = ViewModelProviders.of(getActivity()).get(SelectedRepoViewModel.class);
+        selectedRepoViewModel.setSelectedRepo(repo);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.screen_container, new DetailsFragment())
+                .addToBackStack(null)
+                .commit();
     }
 
     private void observeViewModel() {
@@ -89,4 +101,5 @@ public class ListFragment extends Fragment {
             unbinder = null;
         }
     }
+
 }
