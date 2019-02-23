@@ -1,5 +1,8 @@
 package com.korosmatick.architecturecomponents.networking;
 
+import com.korosmatick.architecturecomponents.model.ModelAdapterFactory;
+import com.squareup.moshi.Moshi;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -14,10 +17,10 @@ public abstract class NetworkModule {
 
     @Provides
     @Singleton
-    static Retrofit provideRetrofit() {
+    static Retrofit provideRetrofit(Moshi moshi) {
         return new Retrofit.Builder()
                 .baseUrl(BASE_URL)
-                .addConverterFactory(MoshiConverterFactory.create())
+                .addConverterFactory(MoshiConverterFactory.create(moshi))
                 .build();
     }
 
@@ -25,5 +28,13 @@ public abstract class NetworkModule {
     @Singleton
     static RepoService provideRepoService(Retrofit retrofit){
         return retrofit.create(RepoService.class);
+    }
+
+    @Provides
+    @Singleton
+    static Moshi provideMoshi() {
+        return new Moshi.Builder()
+                .add(ModelAdapterFactory.create())
+                .build();
     }
 }

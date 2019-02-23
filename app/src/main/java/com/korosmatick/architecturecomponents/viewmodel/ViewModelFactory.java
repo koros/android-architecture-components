@@ -28,6 +28,5 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         } catch (Exception e) {
             throw (new RuntimeException("Error creating view model for class " + modelClass.getSimpleName(), e));
         }
-
     }
 }

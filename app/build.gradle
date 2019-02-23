@@ -27,6 +27,8 @@ def supportLibraryVersion = '27.1.1'
 def retrofitVersion = '2.3.0'
 def butterKnifeVersion = '8.8.1'
 def daggerVersion = '2.13'
+def autoValueVersiion = '1.5.1'
+def autoValueMoshiVersion = '0.4.5'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -47,6 +49,11 @@ dependencies {
     implementation "com.google.dagger:dagger:$daggerVersion"
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
 
+    compileOnly "com.google.auto.value:auto-value:$autoValueVersiion"
+    annotationProcessor "com.google.auto.value:auto-value:$autoValueVersiion"
+
+    compileOnly "com.ryanharter.auto.value:auto-value-moshi:$autoValueMoshiVersion"
+    annotationProcessor "com.ryanharter.auto.value:auto-value-moshi:$autoValueMoshiVersion"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
